@@ -1,3 +1,6 @@
+#### TUTORIAL FROM: https://courses.physics.illinois.edu/ece590sip/sp2018/spectrograms1_wideband_narrowband.html
+#### currently trying to adapt for flac files
+
 
 import io
 import math
@@ -86,7 +89,7 @@ f2 = plt.figure(figsize=(14,4))
 plt.plot(w)
 
 
-'''
+
 
 print('plotting frame 12 of each song')
 
@@ -101,7 +104,7 @@ plt.plot(np.linspace(0,0.005,len(p_frames[11])),p_frames[11])
 plt.title('A frame from Pride and Prejudice')
 
 
-''2) Create STFT from the frames''
+'''2) Create STFT from the frames'''
 
 print('\n2) Create STFT from the frames')
 print('defining function stft')
@@ -141,7 +144,7 @@ plt.title('Pride and Prejudice')
 plt.xlabel('Frequency (Hertz)')
 
 
-''3) Compute Level'
+'''3) Compute Level'''
 
 print('\n3) Compute Level')
 print('defining function stft2level')
@@ -173,7 +176,7 @@ plt.ylabel('Freq (Hz)')
 print(p_fs)
 
 
-''Spectrogram Function''
+'''Spectrogram Function'''
 
 print('\nSpectrogram Function')
 print('defining function sgram')
@@ -195,7 +198,7 @@ plt.imshow(np.transpose(np.array(p_sgram)),origin='lower',extent=(0,p_maxtime,0,
 
 
 
-''Wideband/Narrowband spectrogram''
+'''Wideband/Narrowband spectrogram'''
 print('\nWideband/Narrowband spectrogram')
 
 print('wideband spectrogram for "Pride and Prejudice"')
@@ -226,7 +229,6 @@ plt.title('Narrowband Spectrogram of a segment from White Fang')
 
 
 
-'''
 
 
 
