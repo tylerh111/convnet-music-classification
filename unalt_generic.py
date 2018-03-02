@@ -1,12 +1,12 @@
 # CNN with a custom dataflow 
-# 
+#
 # Author: Jeremy
-# 
+#
 # Each epoch the CNN training takes a random patch from training and validation images to minimize overfitting
 # History: used CNN_smallpics_v1.py with Validate = false, seeds: 42,47,49
 #          Started with model from this run of CNN_smallpicsFalse/weights.465.hdf5
-import numpy as np 
-import pandas as pd 
+import numpy as np
+import pandas as pd
 import os
 from PIL import Image
 from skimage.transform import resize
@@ -90,8 +90,8 @@ np.random.seed(SEEDS[1])
 set_random_seed(SEEDS[2])
 
 # ## Generate Training and Validation splits
-# 
-# So that they are compatible with the custom dataflow generator 
+#
+# So that they are compatible with the custom dataflow generator
 
 # Any results you write to the current directory are saved as output.
 list_paths = []
@@ -160,22 +160,22 @@ for split in range(3):
             filepath = PATH + DIR_SEP + line.strip()
             label = label_transform(get_class_from_path(filepath))
             train_ex2[label].append(filepath)
-               
+
 list_valid = [PATH + DIR_SEP + line.strip() for line in open("./level2_split" + str(VALID_SPLIT),'r')]
 valid_ex = [[],[],[],[],[],[],[],[],[],[]]
 for filepath in list_valid:
     label = label_transform(get_class_from_path(filepath))
     valid_ex[label].append(filepath)
 
-    
+
 partition = {'train': [train_ex1,train_ex2,train_ex2], 'validation': [valid_ex]}
 
 
 print("done assembling training and validation sets")
 
-# ## Custom Dataflow Generator 
-# 
-# 
+# ## Custom Dataflow Generator
+#
+#
 # Code adapted from blog at: https://stanford.edu/~shervine/blog/keras-how-to-generate-data-on-the-fly.html
 
 
@@ -211,7 +211,7 @@ class DataGenerator(object):
         # Initialization
         X = np.empty((self.batch_size, self.dim_x, self.dim_y, self.dim_z))
         y = np.empty((self.batch_size), dtype = int)
-    
+
         for i in range(self.batch_size):
             sector = randint(0,len(list_IDs)-1)
             label = randint(0,self.nclass-1)
@@ -234,7 +234,7 @@ def sparsify(y):
 
 
 # ## Train the CNN
-# 
+#
 # Code adapted from: https://github.com/keras-team/keras/blob/master/examples/cifar10_cnn.py
 
 # In[10]:
@@ -247,7 +247,7 @@ nclass = 10
 def get_model():
 
     num_classes = 10
-    
+
     input_shape=(MODELS[MODEL]['size'],MODELS[MODEL]['size'],3)
     #preprocess = imagenet_utils.preprocess_input
 
@@ -284,14 +284,14 @@ def get_model():
     x = Dense(128, activation='relu', name='fc2')(x)
     x = Dropout(0.3,         name='dropout_fc2')(x)
     prediction = Dense(nclass, activation ="softmax", name="predictions")(x)
-    
+
     # this is the model we will train
     my_model = Model(inputs=(input_image), outputs=prediction)
-    
+
     # first: train only the top layers
     #for layer in base_model.layers:
     #    layer.trainable = False
-    
+
     # compile the model (should be done *after* setting layers to non-trainable)
     opt = optimizers.Adam(lr=1e-4)
     my_model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['acc'])
@@ -337,15 +337,15 @@ if STARTING_MODEL != "":
 # Generators
 training_generator = DataGenerator(**paramsTrain).generate(partition['train'])
 validation_generator = DataGenerator(**paramsValid).generate(partition['validation'])
-    
+
 # Train model on dataset
 history = model.fit_generator(generator = training_generator,
                         steps_per_epoch = paramsTrain['batches_per_epoch'],
                         validation_data = validation_generator,
                         validation_steps = paramsValid['batches_per_epoch'],
-                        epochs=1000, 
+                        epochs=1000,
                         verbose=2,callbacks=callbacks_list)
-    
+
 print(history)
 
-    
+
